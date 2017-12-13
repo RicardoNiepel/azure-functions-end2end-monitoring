@@ -1,0 +1,2 @@
+# AzureFuncAppEnd2EndMonitoring
+Azure Functions end2end monitoring with ApplicationInsights
