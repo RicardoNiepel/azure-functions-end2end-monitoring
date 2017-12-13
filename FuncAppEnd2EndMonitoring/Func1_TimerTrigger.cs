@@ -75,10 +75,8 @@ namespace FuncAppEnd2EndMonitoring
                 operation.Telemetry.ResultCode = response.StatusCode.ToString();
                 _telemetryClient.StopOperation(operation);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                _telemetryClient.TrackException(e);
-
                 if (response == null)
                 {
                     operation.Telemetry.Success = false;
