@@ -74,7 +74,7 @@ namespace FuncAppEnd2EndMonitoring
                 response.EnsureSuccessStatusCode();
 
                 operation.Telemetry.Success = true;
-                operation.Telemetry.ResultCode = response.StatusCode.ToString();
+                operation.Telemetry.ResultCode = ((int)response.StatusCode).ToString();
                 _telemetryClient.StopOperation(operation);
             }
             catch (Exception)

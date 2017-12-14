@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace FuncAppEnd2EndMonitoring
 {
@@ -32,8 +33,10 @@ namespace FuncAppEnd2EndMonitoring
 
             var requestTelemetry = new RequestTelemetry
             {
-                Name = $"{req.Method} {req.Path}"
+                Name = $"{req.Method} {req.Path}",
+                Url = new Uri(req.GetDisplayUrl())
             };
+            requestTelemetry.Properties["httpMethod"] = req.Method;
 
             if (req.Headers.ContainsKey("Request-Id"))
             {
@@ -86,10 +89,10 @@ namespace FuncAppEnd2EndMonitoring
             CloudQueueClient queueClient = _storageAccount.CreateCloudQueueClient();
             CloudQueue queue = queueClient.GetQueueReference("myqueue-items");
 
-            var operation = _telemetryClient.StartOperation<DependencyTelemetry>("enqueue " + queue.Name);
-            operation.Telemetry.Type = "Queue";
+            var operation = _telemetryClient.StartOperation<DependencyTelemetry>("Enqueue " + queue.Name);
+            operation.Telemetry.Type = "Azure queue";
             operation.Telemetry.Target = queue.StorageUri.PrimaryUri.Host;
-            operation.Telemetry.Data = "Enqueue " + queue.Name;
+            operation.Telemetry.Data = $"POST {_storageAccount.Credentials.AccountName}/{queue.Name}";
 
             var jsonPayload = JsonConvert.SerializeObject(new MessagePayload
             {
