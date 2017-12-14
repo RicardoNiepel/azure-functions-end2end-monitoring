@@ -49,7 +49,9 @@ namespace FuncAppEnd2EndMonitoring
                 _telemetryClient.TrackException(e);
 
                 operation.Telemetry.Success = false;
+                operation.Telemetry.ResponseCode = "500";
                 _telemetryClient.StopOperation(operation);
+
                 throw;
             }
         }
@@ -84,7 +86,7 @@ namespace FuncAppEnd2EndMonitoring
                 else
                 {
                     operation.Telemetry.Success = response.IsSuccessStatusCode;
-                    operation.Telemetry.ResultCode = response.StatusCode.ToString();
+                    operation.Telemetry.ResultCode = ((int)response.StatusCode).ToString();
                 }
 
                 _telemetryClient.StopOperation(operation);

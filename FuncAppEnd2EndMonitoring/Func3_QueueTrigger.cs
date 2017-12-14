@@ -44,6 +44,7 @@ namespace FuncAppEnd2EndMonitoring
                 _telemetryClient.TrackException(e);
 
                 operation.Telemetry.Success = false;
+                operation.Telemetry.ResponseCode = "500";
                 _telemetryClient.StopOperation(operation);
 
                 throw;

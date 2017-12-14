@@ -105,13 +105,17 @@ namespace FuncAppEnd2EndMonitoring
             try
             {
                 await queue.AddMessageAsync(queueMessage, null, null, new QueueRequestOptions(), context);
+
+                operation.Telemetry.Success = true;
+                operation.Telemetry.ResultCode = "200";
             }
             catch (StorageException e)
             {
+                _telemetryClient.TrackException(e);
+
                 operation.Telemetry.Properties.Add("AzureServiceRequestID", e.RequestInformation.ServiceRequestID);
                 operation.Telemetry.Success = false;
                 operation.Telemetry.ResultCode = e.RequestInformation.HttpStatusCode.ToString();
-                _telemetryClient.TrackException(e);
             }
             finally
             {
